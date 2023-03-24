@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps</title>
+    <style>
+        #map{
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Google Maps</h1>
+    <div id="map"></div>
+    
+    <script>
+        function initMap(){
+			var lat = "";
+			var longi = "";
+			const success = (position) => {
+					console.log(position);
+					const latitude = position.coords.latitude;
+					lat = latitude;
+					const longitude = position.coords.longitude;
+					longi = longitude
+				}
+				
+				const error = () => {
+					//status.textContent = 'Error to receive your location';
+				}
+				
+				navigator.geolocation.getCurrentPosition(success, error);
+				
+            var options = {
+                zoom:8,
+                center:{lat:42.3601,lng:-71.0589}
+            }
+
+            var map = new google.maps.Map(document.getElementById('map'), options);
+
+            // listen click on map
+            google.maps.event.addListener(map, 'click', function(event){
+                addMarker({coords:event.latLng});
+            });
+
+            // array of markers
+            var markers = [
+                {coords:{lat:6.4668,lng:-7.9495},
+                    iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+                    content:'<h4><a href="https://www.google.com/maps/dir//6.4668,-7.9495">Cliquez pour une redirection vers Cotonou </a></h4>'
+                },
+                {coords:{lat:7.5230,lng:-7.9495},
+                    iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+                    content:'<h4><a href="https://www.google.com/maps/dir//7.8584,-7.9300">Cliquez pour une redirection vers Abomey</a></h4>'
+                 },
+                 {
+                     coords:{lat:7.8584,lng:-7.9300}
+                 }
+
+            ];
+
+            // loop through markers
+            for( var i = 0; i < markers.length; i++){
+                // add marker
+                addMarker(markers[i]);
+            }
+
+
+            function addMarker(props){
+                var marker = new google.maps.Marker({
+                    position : props.coords,
+                    map:map,
+                   // icon:'props.iconImage'
+                });
+
+                if(props.iconImage){
+                    marker.setIcon(props.iconImage);
+                }
+
+                if(props.content){
+                    var infowindow = new google.maps.InfoWindow({
+                        content: props.content
+                    });
+
+                    marker.addListener('click',function(){
+                        infowindow.open(map, marker);
+                    });
+                }
+                
+            
+            }
+        }
+    </script>
+    <!--script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB51yKj9qLFhLYpbq_T_W02mB7uZk2aM5I&callback=initMap"></script-->
+	
+	  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEmW6ayyZs7MbrKKsuDBu5FiAf67WOEek&callback=initMap"></script>
+</body>
+</html>
